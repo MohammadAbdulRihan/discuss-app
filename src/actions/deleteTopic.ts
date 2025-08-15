@@ -22,51 +22,37 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 
 /**
- * Deletes a topic and all its associated posts and comments
- * WARNING: This is a destructive operation that removes all content in the topic
+ * Server action to delete a topic and all associated posts and comments
+ * Only the topic creator can delete their own topics
  * 
  * @param topicId - The ID of the topic to delete
- * @throws Error if user is not authenticated
- * @throws Error if topic is not found
- * @throws Error if user doesn't own the topic
+ * @throws Error if user is not authenticated or not the topic owner
  */
 export const deleteTopic = async (topicId: string) => {
-    // Step 1: Check if user is authenticated
+    // Check if user is authenticated
     const session = await auth();
     
     if (!session || !session.user) {
         throw new Error("You must be signed in to delete a topic");
     }
 
-    // Step 2: Find the topic and verify it exists
+    // Find the topic and verify ownership
     const topic = await prisma.topic.findUnique({
         where: { id: topicId },
-        include: { 
-            posts: {
-                include: {
-                    _count: {
-                        select: { comments: true }
-                    }
-                }
-            },
-            _count: {
-                select: { posts: true }
-            }
-        }
+        include: { posts: true }
     });
 
     if (!topic) {
         throw new Error("Topic not found");
     }
 
-    // Step 3: Verify ownership - Only the creator can delete
-    if ((topic as any).userId !== session.user.id) {
+    // Verify that the current user is the topic owner
+    if (topic.userId !== session.user.id) {
         throw new Error("You can only delete your own topics");
     }
 
     try {
-        // Step 4: Delete all comments in all posts within this topic
-        // This must be done first due to foreign key constraints
+        // Delete all comments associated with posts in this topic
         await prisma.comment.deleteMany({
             where: {
                 post: {
@@ -75,29 +61,26 @@ export const deleteTopic = async (topicId: string) => {
             }
         });
 
-        // Step 5: Delete all posts in this topic
+        // Delete all posts in this topic
         await prisma.post.deleteMany({
             where: { topicId: topicId }
         });
 
-        // Step 6: Delete the topic itself
+        // Delete the topic itself
         await prisma.topic.delete({
             where: { id: topicId }
         });
 
-        // Step 7: Revalidate homepage to show updated topic list
+        // Revalidate the home page to refresh the topics list
         revalidatePath("/");
         
-    } catch (error) {
-        // Only catch actual database errors, not redirects
-        if (error instanceof Error && !error.message.includes('NEXT_REDIRECT')) {
-            console.error("Error deleting topic:", error);
-            throw new Error("Failed to delete topic. Please try again.");
+    } catch (error: unknown) {
+        if (error instanceof Error) {
+            throw new Error(`Failed to delete topic: ${error.message}`);
         }
-        // Re-throw redirect errors
-        throw error;
+        throw new Error("Failed to delete topic");
     }
     
-    // Step 8: Redirect user back to homepage (outside try-catch)
+    // Redirect to home page after successful deletion
     redirect("/");
 }
