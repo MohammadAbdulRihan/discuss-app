@@ -1,33 +1,92 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# SpeakSpace
 
-## Getting Started
+A modern community discussion platform built with Next.js where users can create topics, share posts, and engage in meaningful conversations.
 
-First, run the development server:
+## 🚀 Features
 
+- **Community Topics**: Create and explore discussion topics
+- **Interactive Posts**: Share ideas and thoughts within topics  
+- **Real-time Comments**: Engage with other community members
+- **User Authentication**: Secure sign-in with GitHub and Google
+- **Ownership Controls**: Only creators can delete their own content
+- **Modern UI**: Clean, responsive design with Tailwind CSS
+
+## 🛠️ Tech Stack
+
+- **Next.js 15** - React framework with App Router
+- **NextAuth.js v5** - Authentication with OAuth providers
+- **Prisma** - Database ORM with SQLite
+- **TypeScript** - Type-safe development
+- **Tailwind CSS** - Utility-first CSS framework
+- **shadcn/ui** - Modern UI components
+
+## 🏃‍♂️ Getting Started
+
+1. **Clone the repository**
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+git clone <your-repo-url>
+cd discuss-app
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+2. **Install dependencies**
+```bash
+npm install
+```
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+3. **Set up environment variables**
+Create a `.env.local` file in the root directory:
+```env
+NEXTAUTH_SECRET=your-secret-here
+NEXTAUTH_URL=http://localhost:3000
+GITHUB_CLIENT_ID=your-github-client-id
+GITHUB_CLIENT_SECRET=your-github-client-secret
+GOOGLE_CLIENT_ID=your-google-client-id
+GOOGLE_CLIENT_SECRET=your-google-client-secret
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+4. **Set up the database**
+```bash
+npx prisma generate
+npx prisma db push
+```
 
-## Learn More
+5. **Run the development server**
+```bash
+npm run dev
+```
 
-To learn more about Next.js, take a look at the following resources:
+Open [http://localhost:3000](http://localhost:3000) with your browser to see SpeakSpace in action!
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## 📱 Usage
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+1. **Sign In**: Use GitHub or Google to authenticate
+2. **Create Topics**: Start new discussion topics
+3. **Share Posts**: Add posts to existing topics
+4. **Comment**: Engage with community posts
+5. **Manage Content**: Delete your own topics and posts
+
+## 🔧 Project Structure
+
+```
+src/
+├── app/                 # Next.js App Router pages
+├── components/          # Reusable UI components
+├── actions/            # Server actions for data mutations
+├── lib/                # Utilities and database queries
+└── auth.ts             # Authentication configuration
+```
+
+## 🚀 Deployment
+
+SpeakSpace can be deployed on [Vercel](https://vercel.com) with zero configuration:
+
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new)
+
+Make sure to add your environment variables in the Vercel dashboard.
+
+---
+
+Built with ❤️ using Next.js and modern web technologies.
 
 ## Deploy on Vercel
 
