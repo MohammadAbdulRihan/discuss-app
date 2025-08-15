@@ -3,6 +3,11 @@ import TopicCreateForm from "@/components/topics/TopicCreateForm";
 import { fetchTopPosts } from "@/lib/query/post";
 import  TrendingTopics from "@/components/topics/TrendingTopics";
 
+// Force dynamic rendering - prevents static generation
+export const dynamic = 'force-dynamic'
+// Revalidate every 0 seconds (always fresh)
+export const revalidate = 0
+
 export default async function Home() {
   return (
     <main className="px-6 py-8 bg-gray-50 min-h-screen">
