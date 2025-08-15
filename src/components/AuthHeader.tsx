@@ -1,6 +1,5 @@
 "use client"
 import React from 'react'
-import Image from 'next/image'
 import { useSession } from 'next-auth/react';
 import { signIn } from "@/actions/sign-in";
 import { signOut } from "@/actions/sign-out";
@@ -32,13 +31,7 @@ const AuthHeader =  () => {
             <Popover>
               <PopoverTrigger>
                 <Avatar>
-                  <Image 
-                    src={session.data.user.image || ""} 
-                    alt="User Avatar" 
-                    width={32}
-                    height={32}
-                    className="w-8 h-8 rounded-full" 
-                  />
+                  <img src={session.data.user.image || ""} alt="User Avatar" className="w-8 h-8 rounded-full" />
                 </Avatar>
               </PopoverTrigger>
               <PopoverContent>

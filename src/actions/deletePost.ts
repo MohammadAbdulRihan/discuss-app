@@ -80,5 +80,6 @@ export const deletePost = async (postId: string) => {
     }
     
     // Step 7: Redirect user back to the topic page (outside try-catch)
+    revalidatePath(`/topics/${post.topic.slug}`);
     redirect(`/topics/${post.topic.slug}`);
 }

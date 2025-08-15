@@ -82,5 +82,6 @@ export const deleteTopic = async (topicId: string) => {
     }
     
     // Redirect to home page after successful deletion
+    revalidatePath("/");
     redirect("/");
 }
